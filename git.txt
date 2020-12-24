@@ -1,0 +1,146 @@
+//新建一个隐藏的文件夹，初始化一个Git工程，便于版本控制，里面分是三个区域：工作区 缓存区 仓库
+//git工作流程：在工作区编辑文件产生变化，添加文件变化到缓存区，保存文件的变化到仓库
+git init 
+git config --global user.name "nameVal"
+git config --global user.email "eamil@qq.com"
+创建SSH Key
+$ ssh-keygen -t rsa -C "youremail@example.com"
+
+//查看工作区以及缓存区的状态
+git status 
+git add  文件名  添加工作区的文件到缓存区
+git rm   文件名
+git checkout -- test.txt  恢复删除的
+
+
+//实例
+//1 创建一个空文件  查看状态
+touch test.txt 
+git status 
+//2 将文件添加到缓存区 查看状态
+git add test.txt
+git status
+//3 将这个文件提交到仓库 查看状态
+git commit -m "init"
+git status 
+
+
+//diff 比较工作区和缓存区的不同
+//1 编辑test.txt 里面加入内容后执行下,会看见工作区加入了刚刚加入的数据
+git diff test.txt
+
+//2 将其添加到缓存区并提交
+git add test.txt 
+git commit -m "add three lines"
+
+//3 再次编辑test.txt文件执行下面
+git diff test.txt
+//备注： diff 命令是比较工作区和缓存区的，如果2步骤中commit之后缓存区就空了，当缓存区为空，比较的是仓库区中最新commit提交的数据
+
+展示之前所有的commit历史
+git log
+git log --pretty=oneline  -- 简单显示
+git reglog  -- 查看命令历史
+
+//版本回退
+//1 HEAD 当前所在的commit称为 HEAD,当前最新版本 commit，大部分情况下，最后一次提交的commit 就是HEAD commit ,简称HEAD
+//显示head 
+git show head
+
+//2 编辑工作区后想退回之前的状态
+git checkout head test.txt
+
+//3 将文件从缓存区中撤回（编辑后 add了，但是没有commit）
+git reset head test.txt
+
+//4 reset 改变head位置（工作区的内容不变，只是把head拉回原来的版本）
+git reset  cc99e  （此串是commit的 键值缩写，git log 可以看见）
+
+//回退上一个版本  head^   上上一个版本 head^^
+git reset --hard head^         head~100 上一百个版本
+//
+
+//4checkout 撤回的更加彻底，直接将版本回退到那个版本，工作区的内容也直接回退到改版本
+git checkout cc99e
+git checkout -- test.txt  丢弃之前的修改
+
+小结
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD
+       	<file>，就回到了场景1，第二步按场景1操作。
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+
+//查看分支 创建分支 删除分支
+查看分支
+git branch    // * 代表当前所在的分支
+
+//创建分支  在master(主分支) 上创建分支  完全copy了主分支
+git branch branch_1
+//切换分支
+git checkout branch_1
+//merge   Fast-forward 合并  这种合并没有冲突 比较友好
+git checkout master
+git merge branch_1
+//删除分支
+git branch -d branch_1
+
+//团队协作 克隆   cloneGit 就是远程仓库 专属名词 origin
+git clone git_base cloneGit
+
+//fetch  将远程仓库拉取到origin/master的分支 git branch看不见 但是存在 这个分支合并到主分支，就与远程一致了
+git fetch 
+git merge origin/master
+
+//push  将分支push给远程仓库
+git branch ori_branch_1
+git push origin ori_branch_1
+
+
+//协作工作流程 
+1 第一次克隆或fetch和merge操作，保持与远程同步
+2 必须创建一个新的分支
+3 开发
+4 fetch merge操作 再次与远程同步
+5 将分支push给远程、
+
+
+第一次修改 -> git add -> 第二次修改 -> git commit    备注： 这里面的commit 提交的是add后的缓存区的内容，修改文件但是没有add，是不会提交到仓库中
+
+id_rsa（私钥）和id_rsa.pub（公钥） 是SSH Key的秘钥对
+
+//执行下面 就可以和GitHub 远程仓库进行关联了
+git remote add origin https://github.com/hltcoffee/h_repository1.git
+
+//把本地仓库推送到 远程仓库  加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令
+
+git push -u origin master
+
+git 出现错误 Could not resolve host: github.com
+在  C:\Windows\System32\drivers\etc  host文件里面加入下面内容
+192.30.255.112  github.com  //github地址
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
