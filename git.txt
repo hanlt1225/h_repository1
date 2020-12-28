@@ -1,10 +1,12 @@
 //新建一个隐藏的文件夹，初始化一个Git工程，便于版本控制，里面分是三个区域：工作区 缓存区 仓库
 //git工作流程：在工作区编辑文件产生变化，添加文件变化到缓存区，保存文件的变化到仓库
 git init 
-git config --global user.name "nameVal"
-git config --global user.email "eamil@qq.com"
-创建SSH Key
-$ ssh-keygen -t rsa -C "youremail@example.com"
+git config --global user.name "hanlt"
+git config --global user.email "hanlt1225@163.com"
+创建SSH Key  C:\Users\My\.ssh
+ssh-keygen -t rsa -C "hanlt1225@163.com"
+git --version //验证是否成功
+
 
 //查看工作区以及缓存区的状态
 git status 
@@ -322,8 +324,97 @@ git remote -v  //显示更详细的信息
 ----------------------------------------团队协作部分------------------------------------------------
 
 
+// 创建标签   git tag <tagname>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+git tag v1.0
+// 创建标签并做备注信息  git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+git tag -a v1.1 -m “标签的备注信息”
+//查看所有标签
+git tag
+//显示单个标签的详细信息
+git show v1.1
+//删除标签  创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+git tag -d v1.1
+
+//推送某个标签到远程
+git push origin v1.0
+//一次性推送全部尚未推送到远程的本地标签
+git push origin --tags
+//标签已经推送到远程,删除远程标签步骤
+//第一步 删除本地标签
+git tag -d v0.9
+//第二步 删除远程标签
+git push origin :refs/tags/v0.9
+//第三步 登录GitHub是否删除
+
+//克隆GitHub上的项目 
+访问要克隆的项目主页 -- >点击Fork(右上角)-- > 本地登录账号-- >git clone https://github.com/hltcoffee/bootstrap.git
+//推给官网 Pull requests
+
+----------------------------------使用gitee--------------------------------------------------------------
+//关联远程仓库
+git remote add origin https://github.com/hanlt1225/h_repository1.git
+可以正常地用git push和git pull推送了
+//git remote add时报错  origin already exists.
+git remote -v //查看远程
+//删除已有的GitHub远程库：
+git remote rm origin
+//在关联gitee
+git remote add origin https://gitee.com/hanlt1225/repository_1
+//git remote -v //查看关联的远程
+
+// github和gitee都想用
+// 第一步：删除本地的远程仓库
+git remote rm origin
+// 第二步： 关联GitHub的仓库  
+git remote add github https://github.com/hanlt1225/h_repository1.git
+// 第三步： 关联gitee仓库
+git remote add gitee https://gitee.com/hanlt1225/repository_1
+// 第四步：查看关联的远程仓库
+git remote -v
+// 第五步：推送分支到远程仓库
+git push github master
+git push gitee master
+
+//自定义Git  标上颜色
+git config --global color.ui true
+
+//忽略特殊文件  .gitignore
+//你想添加一个文件到Git，但发现添加不了，原因是这个文件被.gitignore忽略了：
+git add App.class
+//想添加该文件，可以用-f强制添加到Git：
+git add -f App.class
+//可能是.gitignore写得有问题，需要找出来到底哪个规则写错
+git check-ignore -v App.class
 
 
+小结
+忽略某些文件时，需要编写.gitignore；
+.gitignore文件本身要放到版本库里，并且可以对.gitignore做版本管理！
+
+//配置别名  --global参数是全局参数，也就是这些命令在这台电脑的所有Git仓库下都有用。
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.ci commit
+git config --global alias.br branch
+//撤销
+git config --global alias.unstage 'reset HEAD'
+即是
+git unstage test.py
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+//--global 表示当前电脑上所有的仓库都能用；去掉的话只能本仓库能用
+git config alias.last 'log -1'
+//查看别名的配置文件
+cat .git/config
+//显示如下
+[alias]
+        last = log -1
+		
+//而当前用户的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中： git/bash 需要切换到该文件目录下C:\Users\My
+cat .gitconfig  --显示全局的别名信息
+
+//搭建git服务器
+https://www.liaoxuefeng.com/wiki/896043488029600/899998870925664
 
 
 
